@@ -1,5 +1,7 @@
 package com.ideas2it.employeeManagement.service;
 
+import com.ideas2it.employeeManagement.dto.EmployeeDto;
+import com.ideas2it.employeeManagement.dto.SkillDto;
 import com.ideas2it.employeeManagement.model.Skill;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +20,11 @@ public interface SkillService {
      * <p>
      * Adds a specific skill
      * </p>
-     * @param skill - skill that has to be added
+     * @param skillDto {@link SkillDto}- skill that has to be added
      * @return skill that is added
      */
 
-    Skill addSkill(Skill skill);
+    SkillDto addSkill(SkillDto skillDto);
 
     /**
      * <p>
@@ -31,7 +33,7 @@ public interface SkillService {
      * @return all the available skills
      */
 
-    List<Skill> getAllSkills();
+    List<SkillDto> getAllSkills();
 
     /**
      * <p>
@@ -41,27 +43,36 @@ public interface SkillService {
      * @return skill that has been fetched
      */
 
-    Skill getSkillById(int id);
+    SkillDto getSkillById(int id);
 
     /**
      * <p>
      * Fetches a specific skill
      * </p>
-     * @param skill - skill details to be updated in the skill
+     * @param skillDto {@link SkillDto} - skill details to be updated in the skill
      * @param id - id of the skill
-     * @return skill to be updated
+     * @return skill that is updated
      */
 
-    Skill updateSkill(Skill skill, int id);
+    SkillDto updateSkill(SkillDto skillDto, int id);
 
     /**
      * <p>
      * Remove a specific skill
      * </p>
-     * @param id
+     * @param id - id of skill to be removed
      */
 
     void removeSkill(int id);
 
+    /**
+     * <p>
+     * Fetches all the employees related to a specific skill
+     * </p>
+     * @param id - id of the skill for which employees has to be fetched
+     * @return list of employees related to a specific skill
+     */
+
+    List<EmployeeDto> getEmployeesBySkill(int id);
 }
 

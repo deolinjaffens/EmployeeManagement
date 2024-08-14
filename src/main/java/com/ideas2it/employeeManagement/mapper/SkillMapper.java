@@ -2,7 +2,9 @@ package com.ideas2it.employeeManagement.mapper;
 
 import com.ideas2it.employeeManagement.dto.SkillDto;
 import com.ideas2it.employeeManagement.model.Skill;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SkillMapper {
 
     /**

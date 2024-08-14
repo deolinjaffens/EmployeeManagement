@@ -2,14 +2,20 @@ package com.ideas2it.employeeManagement.controller;
 
 import com.ideas2it.employeeManagement.dto.EmployeeDto;
 import com.ideas2it.employeeManagement.dto.SkillDto;
-import com.ideas2it.employeeManagement.mapper.Mapper;
-import com.ideas2it.employeeManagement.model.Employee;
-import com.ideas2it.employeeManagement.model.Skill;
 import com.ideas2it.employeeManagement.service.EmployeeService;
+import com.ideas2it.employeeManagement.util.exception.EmployeeException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +29,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("api/employees")
+@RequestMapping("api/v1/employees")
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
@@ -39,8 +45,8 @@ public class EmployeeController {
      */
 
     @PostMapping
-    public EmployeeDto addEmployee(@RequestBody EmployeeDto employeeDto) {
-        return employeeService.addEmployee(employeeDto, employeeDto.getDepartmentId());
+    public ResponseEntity<EmployeeDto> addEmployee(@RequestBody EmployeeDto employeeDto) {
+        return new ResponseEntity<>(employeeService.addEmployee(employeeDto, employeeDto.getDepartmentId()), HttpStatus.CREATED);
     }
 
     /**
@@ -52,12 +58,8 @@ public class EmployeeController {
      */
 
     @GetMapping
-    public List<EmployeeDto> getAllEmployees() {
-        List<EmployeeDto> employees = new ArrayList<>();
-        for (Employee employee : employeeService.getAllEmployees()) {
-            employees.add(Mapper.mapEmployeeDto(employee));
-        }
-        return employees;
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
+        return new ResponseEntity<>(employeeService.getAllEmployees(),HttpStatus.OK);
     }
 
     /**
@@ -70,8 +72,8 @@ public class EmployeeController {
      */
 
     @GetMapping("/{id}")
-    public EmployeeDto getEmployeeById(@PathVariable int id) {
-        return Mapper.mapEmployeeDto(employeeService.getEmployeeById(id));
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable int id) {
+        return new ResponseEntity<>(employeeService.getEmployeeById(id),HttpStatus.OK);
     }
 
     /**
@@ -79,14 +81,14 @@ public class EmployeeController {
      * Updates a specific employee
      * </p>
      *
-     * @param employeeDto - employee that has to updated
+     * @param employeeDto {@link EmployeeDto}- employee that has to updated
      * @param id          - id of the employee that has to be updated
      * @return updated employee
      */
 
     @PutMapping("/{id}")
-    public EmployeeDto updateEmployee(@RequestBody EmployeeDto employeeDto, @PathVariable int id) {
-        return employeeService.updateEmployee(employeeDto, id);
+    public ResponseEntity<EmployeeDto> updateEmployee(@RequestBody EmployeeDto employeeDto, @PathVariable int id) {
+        return new ResponseEntity<>(employeeService.updateEmployee(employeeDto, id), HttpStatus.OK);
     }
 
     /**
@@ -123,12 +125,9 @@ public class EmployeeController {
      * @param id -id of employee whose skills has to be fetched
      * @return list of skills the employee has
      */
+
     @GetMapping("/{id}/skills")
-    public List<SkillDto> getSkillsByEmployee(@PathVariable int id) {
-        List<SkillDto> skills = new ArrayList<>();
-        for (Skill skill : employeeService.getSkillsByEmployee(id)) {
-            skills.add(Mapper.mapSkillDto(skill));
-        }
-        return skills;
+    public ResponseEntity<List<SkillDto>> getSkillsByEmployee(@PathVariable int id) {
+        return new ResponseEntity<>(employeeService.getSkillsByEmployee(id), HttpStatus.OK);
     }
 }

@@ -2,16 +2,13 @@ package com.ideas2it.employeeManagement.controller;
 
 import com.ideas2it.employeeManagement.dto.DepartmentDto;
 import com.ideas2it.employeeManagement.dto.EmployeeDto;
-import com.ideas2it.employeeManagement.mapper.Mapper;
-import com.ideas2it.employeeManagement.model.Department;
-import com.ideas2it.employeeManagement.model.Employee;
 import com.ideas2it.employeeManagement.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -25,7 +22,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("api/departments")
+@RequestMapping("api/v1/departments")
 public class DepartmentController {
 
     @Autowired
@@ -37,13 +34,13 @@ public class DepartmentController {
      * database
      * </p>
      *
-     * @param departmentDto - department that has to be added
+     * @param departmentDto {@link DepartmentDto} - department that has to be added
      * @return - department that has been added
      */
 
     @PostMapping
-    public DepartmentDto addDepartment(@RequestBody DepartmentDto departmentDto) {
-        return departmentService.addDepartment(departmentDto);
+    public ResponseEntity<DepartmentDto> addDepartment(@RequestBody DepartmentDto departmentDto) {
+        return new ResponseEntity<>(departmentService.addDepartment(departmentDto), HttpStatus.OK);
     }
 
     /**
@@ -55,8 +52,8 @@ public class DepartmentController {
      */
 
     @GetMapping
-    public List<DepartmentDto> getAllDepartments() {
-        return departmentService.getAllDepartments();
+    public ResponseEntity<List<DepartmentDto>> getAllDepartments() {
+        return new ResponseEntity<>(departmentService.getAllDepartments(),HttpStatus.OK);
     }
 
     /**
@@ -68,8 +65,8 @@ public class DepartmentController {
      * @return department that has to be fetched
      */
     @GetMapping("/{id}")
-    public DepartmentDto getDepartmentById(@PathVariable int id) {
-        return departmentService.getDepartmentById(id);
+    public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable int id) {
+        return new ResponseEntity<>(departmentService.getDepartmentById(id),HttpStatus.OK);
     }
 
     /**
@@ -77,13 +74,13 @@ public class DepartmentController {
      * Updates a specific department
      * </p>
      *
-     * @param departmentDto - department that has to updated
+     * @param departmentDto {@link DepartmentDto} - department that has to updated
      * @param id            - id of the department that has to be updated
      * @return updated department
      */
     @PutMapping("/{id}")
-    public DepartmentDto updateDepartment(@RequestBody DepartmentDto departmentDto, @PathVariable int id) {
-        return departmentService.updateDepartment(departmentDto, id);
+    public ResponseEntity<DepartmentDto> updateDepartment(@RequestBody DepartmentDto departmentDto, @PathVariable int id) {
+        return new ResponseEntity<>(departmentService.updateDepartment(departmentDto, id),HttpStatus.ACCEPTED);
     }
 
     /**
@@ -108,7 +105,8 @@ public class DepartmentController {
      */
 
     @GetMapping("/{id}/employees")
-    public List<EmployeeDto> getEmployeesByDepartment(@PathVariable int id) {
-        return departmentService.getDepartmentById(id);
+    public ResponseEntity<List<EmployeeDto>> getEmployeesByDepartment(@PathVariable int id) {
+        return new ResponseEntity<>(departmentService.getEmployeesByDepartment(id),HttpStatus.OK);
+
     }
 }

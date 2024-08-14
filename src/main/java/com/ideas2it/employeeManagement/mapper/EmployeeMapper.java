@@ -1,10 +1,11 @@
 package com.ideas2it.employeeManagement.mapper;
 
-import com.ideas2it.employeeManagement.dto.DepartmentDto;
 import com.ideas2it.employeeManagement.dto.EmployeeDto;
-import com.ideas2it.employeeManagement.model.Department;
 import com.ideas2it.employeeManagement.model.Employee;
+import com.ideas2it.employeeManagement.util.DateUtil;
+import org.springframework.stereotype.Component;
 
+@Component
 public class EmployeeMapper {
 
     /**
@@ -21,6 +22,7 @@ public class EmployeeMapper {
         employeeDto.setId(employee.getId());
         employeeDto.setName(employee.getName());
         employeeDto.setDob(employee.getDob());
+        employeeDto.setAge(DateUtil.calculateAge(employee.getDob()));
         employeeDto.setPhoneNumber(employee.getPhoneNumber());
         employeeDto.setSalary(employee.getSalary());
         employeeDto.setGender(employee.getGender());

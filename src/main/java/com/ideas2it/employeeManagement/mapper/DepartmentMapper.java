@@ -2,7 +2,9 @@ package com.ideas2it.employeeManagement.mapper;
 
 import com.ideas2it.employeeManagement.dto.DepartmentDto;
 import com.ideas2it.employeeManagement.model.Department;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DepartmentMapper {
 
     /**

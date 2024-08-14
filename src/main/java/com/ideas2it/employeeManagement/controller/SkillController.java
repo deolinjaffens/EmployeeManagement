@@ -1,13 +1,13 @@
 package com.ideas2it.employeeManagement.controller;
 
+import com.ideas2it.employeeManagement.dto.EmployeeDto;
 import com.ideas2it.employeeManagement.dto.SkillDto;
-import com.ideas2it.employeeManagement.mapper.Mapper;
-import com.ideas2it.employeeManagement.model.Skill;
 import com.ideas2it.employeeManagement.service.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +21,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("api/skills")
+@RequestMapping("api/v1/skills")
 public class SkillController {
     @Autowired
     private SkillService skillService;
@@ -32,13 +32,13 @@ public class SkillController {
      * database
      * </p>
      *
-     * @param skillDto - skill that has to be added
+     * @param skillDto {@link SkillDto}- skill that has to be added
      * @return - skill that has been added
      */
 
     @PostMapping
-    public SkillDto addSkill(@RequestBody SkillDto skillDto) {
-        return skillService.addSkill(skillDto);
+    public ResponseEntity<SkillDto> addSkill(@RequestBody SkillDto skillDto) {
+        return new ResponseEntity<>(skillService.addSkill(skillDto), HttpStatus.CREATED);
     }
 
     /**
@@ -50,8 +50,8 @@ public class SkillController {
      */
 
     @GetMapping
-    public List<SkillDto> getAllSkills() {
-        return skillService.getAllSkills();
+    public ResponseEntity<List<SkillDto>> getAllSkills() {
+        return new ResponseEntity<>(skillService.getAllSkills(),HttpStatus.OK);
     }
 
     /**
@@ -63,8 +63,8 @@ public class SkillController {
      * @return skill that has to be fetched
      */
     @GetMapping("/{id}")
-    public SkillDto getSkillById(@PathVariable int id) {
-        return skillService.getSkillById(id);
+    public ResponseEntity<SkillDto> getSkillById(@PathVariable int id) {
+        return new ResponseEntity<>(skillService.getSkillById(id),HttpStatus.OK);
     }
 
     /**
@@ -72,13 +72,13 @@ public class SkillController {
      * Updates a specific skill
      * </p>
      *
-     * @param skillDto - skill that has to updated
+     * @param skillDto {@link SkillDto}- skill that has to updated
      * @param id       - id of the skill that has to be updated
      * @return updated skill
      */
     @PutMapping("/{id}")
-    public SkillDto updateSkill(@RequestBody SkillDto skillDto, @PathVariable int id) {
-        return skillService.updateSkill(skillDto, id);
+    public ResponseEntity<SkillDto> updateSkill(@RequestBody SkillDto skillDto, @PathVariable int id) {
+        return new ResponseEntity<>(skillService.updateSkill(skillDto, id),HttpStatus.ACCEPTED);
     }
 
     /**
@@ -91,5 +91,17 @@ public class SkillController {
     @DeleteMapping("/{id}")
     public void removeSkill(@PathVariable int id) {
         skillService.removeSkill(id);
+    }
+
+    /**
+     * <p>
+     *  Fetches all the employees related to a specific skill
+     * </p>
+     * @param id - id of the skill for which employees has to be fetched
+     */
+
+    @GetMapping("/{id}/employees")
+    public ResponseEntity<List<EmployeeDto>> getEmployeesBySkill(@PathVariable int id) {
+        return new ResponseEntity<>(skillService.getEmployeesBySkill(id),HttpStatus.OK);
     }
 }

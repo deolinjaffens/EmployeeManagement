@@ -1,6 +1,5 @@
 package com.ideas2it.employeeManagement.dto;
 
-import com.ideas2it.employeeManagement.model.Department;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -25,4 +24,6 @@ public class EmployeeDto {
     private String departmentName;
 
     private int skillId;
+
+    private String age;
 }

@@ -30,7 +30,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto addEmployee(EmployeeDto employeeDto, int departmentId) {
         Employee employee = EmployeeMapper.mapEmployee(employeeDto);
-        employee.setDepartment(DepartmentMapper.mapDepartment(departmentService.getDepartmentById(departmentId)));
+        employee.setDepartment(departmentService.getDepartment(departmentId));
+//        employee.setDepartment(DepartmentMapper.mapDepartment(departmentService.getDepartmentById(departmentId)));
         return EmployeeMapper.mapEmployeeDto(employeeDao.save(employee));
     }
 

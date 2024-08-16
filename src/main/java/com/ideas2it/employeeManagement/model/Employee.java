@@ -12,6 +12,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,11 +34,17 @@ import java.util.Set;
 @Table(name = "employee")
 @EqualsAndHashCode(exclude = "skills")
 public class Employee {
+
+    @Valid
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull(message =  "Name is mandatory")
+    @NotBlank(message =  "Name is mandatory")
+    @Size(min = 3, max = 20, message = "Name should be between 3 to 20")
     @Column(name = "name")
     private String name;
 
@@ -45,6 +56,9 @@ public class Employee {
     @Column(name = "gender")
     private char gender;
 
+    @NotNull(message = "Phone Number is mandatory")
+    @NotBlank(message = "Phone Number is mandatory")
+    @Pattern(regexp = "d{10}",message = "Phone Number entered is not valid")
     @Column(name = "phone_number")
     private String phoneNumber;
 

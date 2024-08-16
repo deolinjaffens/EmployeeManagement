@@ -2,6 +2,7 @@ package com.ideas2it.employeeManagement.service;
 
 import com.ideas2it.employeeManagement.dto.DepartmentDto;
 import com.ideas2it.employeeManagement.dto.EmployeeDto;
+import com.ideas2it.employeeManagement.model.Department;
 import com.ideas2it.employeeManagement.model.Employee;
 import org.springframework.stereotype.Service;
 
@@ -82,4 +83,15 @@ public interface DepartmentService {
      */
 
     List<EmployeeDto> getEmployeesByDepartment(int id);
+
+    /**
+     * <p>
+     * Fetches a specific department from the database
+     * </p>
+     *
+     * @param id - id of the department to be fetched
+     * @return department that is fetched as entity
+     */
+
+    public Department getDepartment(int id);
 }

@@ -10,7 +10,6 @@ import com.ideas2it.employeeManagement.model.Employee;
 import com.ideas2it.employeeManagement.util.exception.EmployeeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +70,16 @@ public class DepartmentServiceImpl implements DepartmentService {
             return employees;
         } else {
             throw new EmployeeException("No Employees found for the department with id " + id);
+        }
+    }
+
+    @Override
+    public Department getDepartment(int id) {
+        Department department = (departmentDao.findById(id).isPresent() ? departmentDao.findById(id).get() : null);
+        if (null != department) {
+            return department;
+        } else {
+            throw new EmployeeException("Department Not Found");
         }
     }
 }

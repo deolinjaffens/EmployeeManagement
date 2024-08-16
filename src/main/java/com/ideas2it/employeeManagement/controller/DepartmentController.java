@@ -3,6 +3,7 @@ package com.ideas2it.employeeManagement.controller;
 import com.ideas2it.employeeManagement.dto.DepartmentDto;
 import com.ideas2it.employeeManagement.dto.EmployeeDto;
 import com.ideas2it.employeeManagement.service.DepartmentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class DepartmentController {
      */
 
     @PostMapping
-    public ResponseEntity<DepartmentDto> addDepartment(@RequestBody DepartmentDto departmentDto) {
+    public ResponseEntity<DepartmentDto> addDepartment(@Valid @RequestBody DepartmentDto departmentDto) {
         return new ResponseEntity<>(departmentService.addDepartment(departmentDto), HttpStatus.OK);
     }
 

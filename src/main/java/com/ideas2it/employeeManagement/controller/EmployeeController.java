@@ -3,7 +3,7 @@ package com.ideas2it.employeeManagement.controller;
 import com.ideas2it.employeeManagement.dto.EmployeeDto;
 import com.ideas2it.employeeManagement.dto.SkillDto;
 import com.ideas2it.employeeManagement.service.EmployeeService;
-import com.ideas2it.employeeManagement.util.exception.EmployeeException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ public class EmployeeController {
      */
 
     @PostMapping
-    public ResponseEntity<EmployeeDto> addEmployee(@RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> addEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         return new ResponseEntity<>(employeeService.addEmployee(employeeDto, employeeDto.getDepartmentId()), HttpStatus.CREATED);
     }
 

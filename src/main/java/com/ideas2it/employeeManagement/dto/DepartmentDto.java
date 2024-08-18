@@ -14,7 +14,7 @@ public class DepartmentDto {
 
     @NotNull(message = "Name is mandatory")
     @NotBlank(message = "Name is Mandatory")
-    @Size(min = 3, max = 30, message = "Name must be between 3 to 30 characters")
+    @Size(min = 2, max = 30, message = "Name must be between 3 to 30 characters")
     private String name;
 
     private String employeeName;

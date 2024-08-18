@@ -36,7 +36,7 @@ public class Department {
 
     @NotNull(message = "Name is mandatory")
     @NotBlank(message = "Name is Mandatory")
-    @Size(min = 3, max = 30, message = "Name must be between 3 to 30 characters")
+    @Size(min = 2, max = 30, message = "Name must be between 3 to 30 characters")
     @Column(name = "name")
     private String name;
 

@@ -3,12 +3,10 @@ package com.ideas2it.employeeManagement.service;
 import com.ideas2it.employeeManagement.dao.EmployeeDao;
 import com.ideas2it.employeeManagement.dto.EmployeeDto;
 import com.ideas2it.employeeManagement.dto.SkillDto;
-import com.ideas2it.employeeManagement.mapper.DepartmentMapper;
 import com.ideas2it.employeeManagement.mapper.EmployeeMapper;
 import com.ideas2it.employeeManagement.mapper.SkillMapper;
 import com.ideas2it.employeeManagement.model.Employee;
 import com.ideas2it.employeeManagement.model.Skill;
-import com.ideas2it.employeeManagement.util.exception.EmployeeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -81,7 +79,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (null != employee) {
             for (Skill skill : employee.getSkills()) {
                 skills.add(SkillMapper.mapSkillDto(skill));
-                System.out.println(SkillMapper.mapSkillDto(skill));
             }
         } else {
             throw new NullPointerException("Employee of id " + id + " not found");

@@ -31,7 +31,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         for (Department department : departmentDao.findAll()) {
             departments.add(DepartmentMapper.mapDepartmentDto(department));
         }
-        if (departments.isEmpty()) {
+        if (!departments.isEmpty()) {
             return departments;
         } else {
             throw new EmployeeException("Departments not found");

@@ -21,7 +21,7 @@ public class EmployeeDto {
 
     @NotNull(message = "Phone Number is mandatory")
     @NotBlank(message = "Phone Number is mandatory")
-    @Pattern(regexp = "d{10}",message = "Phone Number entered is not valid")
+    @Pattern(regexp = "\\d{10}",message = "Phone Number entered is not valid")
     private String phoneNumber;
 
     private double salary;

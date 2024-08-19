@@ -50,7 +50,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDto updateDepartment(DepartmentDto departmentDto, int id) {
-        Department department = DepartmentMapper.mapDepartment(getDepartmentById(id));
+        Department department = departmentDao.findById(id).orElse(null);
+        if(null == department) {
+            throw new NullPointerException("Department not found");
+        }
         department.setName(departmentDto.getName());
         return DepartmentMapper.mapDepartmentDto(departmentDao.save(department));
     }

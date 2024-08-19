@@ -29,7 +29,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDto addEmployee(EmployeeDto employeeDto, int departmentId) {
         Employee employee = EmployeeMapper.mapEmployee(employeeDto);
         employee.setDepartment(departmentService.getDepartment(departmentId));
-//        employee.setDepartment(DepartmentMapper.mapDepartment(departmentService.getDepartmentById(departmentId)));
         return EmployeeMapper.mapEmployeeDto(employeeDao.save(employee));
     }
 
@@ -49,7 +48,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDto updateEmployee(EmployeeDto employeeDto, int id) {
-        Employee employee = EmployeeMapper.mapEmployee(getEmployeeById(id));
+        Employee employee = employeeDao.findById(id).orElse(null);
+        if(null == employee) {
+            throw new NullPointerException("Employee does not exist");
+        }
         employee.setName(employeeDto.getName());
         employee.setDob(employeeDto.getDob());
         employee.setGender(employeeDto.getGender());
@@ -60,14 +62,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void removeEmployee(int id) {
-        Employee employee = EmployeeMapper.mapEmployee(getEmployeeById(id));
+        Employee employee = employeeDao.findById(id).orElse(null);
+        if(null == employee) {
+            throw new NullPointerException("Employee does not exist");
+        }
         employee.setDeleted(true);
         employeeDao.save(employee);
     }
 
     @Override
     public void addEmployeeToSkill(int id, int skillId) {
-        Employee employee = EmployeeMapper.mapEmployee(getEmployeeById(id));
+        Employee employee = employeeDao.findById(id).orElse(null);
+        if (employee == null) {
+            throw new NullPointerException("Employee doesn't exist");
+        }
         employee.getSkills().add(SkillMapper.mapSkill(skillService.getSkillById(skillId)));
         employeeDao.save(employee);
     }

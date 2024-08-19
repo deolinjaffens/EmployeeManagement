@@ -59,7 +59,6 @@ public class Employee {
 
     @NotNull(message = "Phone Number is mandatory")
     @NotBlank(message = "Phone Number is mandatory")
-    @Pattern(regexp = "d{10}",message = "Phone Number entered is not valid")
     @Column(name = "phone_number")
     private String phoneNumber;
 

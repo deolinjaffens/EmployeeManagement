@@ -3,26 +3,18 @@ package com.ideas2it.employeeManagement.service;
 import com.ideas2it.employeeManagement.dao.EmployeeDao;
 import com.ideas2it.employeeManagement.dto.EmployeeDto;
 import com.ideas2it.employeeManagement.dto.SkillDto;
-import com.ideas2it.employeeManagement.mapper.EmployeeMapper;
-import com.ideas2it.employeeManagement.mapper.SkillMapper;
 import com.ideas2it.employeeManagement.model.Department;
 import com.ideas2it.employeeManagement.model.Employee;
 import com.ideas2it.employeeManagement.model.Skill;
-import org.junit.jupiter.api.AfterEach;
+import com.ideas2it.employeeManagement.util.DateUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,184 +35,133 @@ public class EmployeeServiceTest {
     @InjectMocks
     private EmployeeServiceImpl employeeService;
 
-    private MockedStatic<EmployeeMapper> mockStatic;
+    private Employee employee;
+    private Employee responseEmployee;
+    private EmployeeDto employeeDto;
+    private EmployeeDto responseEmployeeDto;
+    private Department department;
+    private Department responseDepartment;
 
     @BeforeEach
-    public void beforeEach() {
-        mockStatic = Mockito.mockStatic(EmployeeMapper.class);
-    }
-
-    @AfterEach
-    public void afterEach() {
-        mockStatic.close();
-    }
-    @Test
-    void testAddEmployee() {
+    void beforeEach() {
         int departmentId = 2;
-        EmployeeDto employeeDto = new EmployeeDto();
+        employeeDto = new EmployeeDto();
+        employeeDto.setId(1);
         employeeDto.setName("Hayden");
         employeeDto.setDob(LocalDate.ofEpochDay(2003- 1 - 2));
         employeeDto.setGender('M');
         employeeDto.setPhoneNumber("9876543210");
         employeeDto.setSalary(23456);
-        Employee employee = new Employee();
+        employeeDto.setDepartmentId(2);
+        employee = new Employee();
+        employee.setId(1);
         employee.setName("Hayden");
         employee.setDob(LocalDate.ofEpochDay(2003- 1 - 2));
         employee.setGender('M');
         employee.setPhoneNumber("9876543210");
         employee.setSalary(23456);
-        Department department = new Department();
+        department = new Department();
         department.setId(departmentId);
         department.setName("Hr");
-        //mockStatic(EmployeeMapper.class);
-        when(departmentService.getDepartment(departmentId)).thenReturn(department);
-        when(EmployeeMapper.mapEmployee(employeeDto)).thenReturn(employee);
         employee.setDepartment(department);
-        when(EmployeeMapper.mapEmployeeDto(employee)).thenReturn(employeeDto);
-        when(EmployeeMapper.mapEmployeeDto(employeeDao.save(employee))).thenReturn(employeeDto);
-        employee.setDepartment(department);
-        EmployeeDto result =employeeService.addEmployee(employeeDto,departmentId);
-        assertEquals(EmployeeMapper.mapEmployeeDto(employee), result);
+        responseEmployeeDto = new EmployeeDto();
+        responseEmployeeDto.setId(1);
+        responseEmployeeDto.setName("Hayden");
+        responseEmployeeDto.setDob(LocalDate.ofEpochDay(2003- 1 - 2));
+        responseEmployeeDto.setGender('M');
+        responseEmployeeDto.setPhoneNumber("9876543210");
+        responseEmployeeDto.setSalary(23456);
+        responseEmployeeDto.setDepartmentId(department.getId());
+        responseEmployeeDto.setDepartmentName(department.getName());
+        responseEmployeeDto.setAge(DateUtil.calculateAge(employeeDto.getDob()));
+        responseEmployee = new Employee();
+        responseEmployee.setId(1);
+        responseEmployee.setName("Hayden");
+        responseEmployee.setDob(LocalDate.ofEpochDay(2003- 1 - 2));
+        responseEmployee.setGender('M');
+        responseEmployee.setPhoneNumber("9876543210");
+        responseEmployee.setSalary(23456);
+        responseEmployee.setDepartment(department);
+    }
 
+    @Test
+    void testAddEmployee() {
+        when(departmentService.getDepartment(2)).thenReturn(department);
+        when(employeeDao.save(any(Employee.class))).thenReturn(responseEmployee);
+        EmployeeDto result = employeeService.addEmployee(employeeDto, department.getId());
+        assertEquals(1, result.getId());
     }
 
     @Test
     void testGetAllEmployees() {
         List<Employee> employees = new ArrayList<>();
         List<EmployeeDto> employeeDto = new ArrayList<>();
-        Department department = new Department();
-        department.setId(2);
-        department.setName("Hr");
-        Employee employee = new Employee();
-        employee.setName("Hayden");
-        employee.setDob(LocalDate.ofEpochDay(2003- 1 - 2));
-        employee.setGender('M');
-        employee.setPhoneNumber("9876543210");
-        employee.setSalary(23456);
-        employee.setDepartment(department);
-        //mockStatic(EmployeeMapper.class);
-        employees.add(employee);
+        employees.add(responseEmployee);
+        employeeDto.add(this.responseEmployeeDto);
         when(employeeDao.findAllEmployees()).thenReturn(employees);
-        employeeDto.add(EmployeeMapper.mapEmployeeDto(employee));
         List<EmployeeDto> result = employeeService.getAllEmployees();
         assertEquals(employeeDto,result);
     }
 
     @Test
     void testGetEmployeeById() {
-        int id = 1;
-        Employee employee = new Employee();
-        Department department = new Department();
-        department.setId(2);
-        department.setName("Hr");
-        employee.setName("Hayden");
-        employee.setDob(LocalDate.ofEpochDay(2003- 1 - 2));
-        employee.setGender('M');
-        employee.setPhoneNumber("9876543210");
-        employee.setSalary(23456);
-        employee.setId(id);
-        employee.setDepartment(department);
-        when(employeeDao.findById(id)).thenReturn(Optional.of(employee));
-        EmployeeDto employeeDto = EmployeeMapper.mapEmployeeDto(employee);
-        EmployeeDto result = employeeService.getEmployeeById(id);
-        assertEquals(employeeDto,result);
+        when(employeeDao.findById(1)).thenReturn(Optional.of(responseEmployee));
+        EmployeeDto result = employeeService.getEmployeeById(1);
+        assertEquals(responseEmployeeDto,result);
     }
 
     @Test
     void testUpdateEmployee() {
-        int id = 1;
-        EmployeeDto employeeDto = new EmployeeDto();
-        Department department = new Department();
-        department.setId(2);
-        department.setName("Hr");
-        employeeDto.setName("Hayden");
-        employeeDto.setDob(LocalDate.ofEpochDay(2003- 1 - 2));
-        employeeDto.setGender('M');
-        employeeDto.setPhoneNumber("9876543210");
-        employeeDto.setSalary(23456);
-        employeeDto.setId(id);
         Employee employee = new Employee();
         employee.setName("Harden");
         employee.setDob(LocalDate.ofEpochDay(2003- 1 - 5));
         employee.setGender('M');
         employee.setPhoneNumber("9876543217");
         employee.setSalary(24536);
-        employee.setId(id);
+        employee.setId(1);
         employee.setDepartment(department);
-        when(EmployeeMapper.mapEmployee(employeeService.getEmployeeById(id))).thenReturn(employee);
-        EmployeeDto result = employeeService.updateEmployee(employeeDto,id);
-        assertEquals(EmployeeMapper.mapEmployeeDto(employee),result);
+        when(employeeDao.findById(1)).thenReturn(Optional.of(employee));
+        when(employeeDao.save(employee)).thenReturn(responseEmployee);
+        EmployeeDto result = employeeService.updateEmployee(employeeDto,1);
+        assertEquals(responseEmployeeDto,result);
     }
 
     @Test
     void testRemoveEmployee() {
-        int id = 1;
-        Department department = new Department();
-        department.setId(2);
-        department.setName("Hr");
-        Employee employee = new Employee();
-        employee.setName("Harden");
-        employee.setDob(LocalDate.ofEpochDay(2003- 1 - 5));
-        employee.setGender('M');
-        employee.setPhoneNumber("9876543217");
-        employee.setSalary(24536);
-        employee.setId(id);
-        employee.setDepartment(department);
-        employee.setDeleted(false);
-        when(EmployeeMapper.mapEmployee(employeeService.getEmployeeById(id))).thenReturn(employee);
-        employeeService.removeEmployee(id);
+        when(employeeDao.findById(1)).thenReturn(Optional.of(employee));
+        employeeService.removeEmployee(1);
         verify(employeeDao).save(employee);
         assertTrue(employee.isDeleted());
     }
 
     @Test
     void testGetSkillsByEmployee() {
-        int id = 1;
         int skillId = 1;
         List<SkillDto> skills = new ArrayList<>();
         Skill skill = new Skill();
         skill.setName("Java");
         skill.setId(skillId);
-        Department department = new Department();
-        department.setId(2);
-        department.setName("Hr");
-        Employee employee = new Employee();
-        employee.setName("Harden");
-        employee.setDob(LocalDate.ofEpochDay(2003- 1 - 5));
-        employee.setGender('M');
-        employee.setPhoneNumber("9876543217");
-        employee.setSalary(24536);
-        employee.setId(id);
-        employee.setDepartment(department);
-        employee.setSkills(new HashSet<>());
-        employee.getSkills().add(skill);
-        when(employeeDao.findById(id)).thenReturn(Optional.of(employee));
-        skills.add(SkillMapper.mapSkillDto(skill));
-        List<SkillDto> result = employeeService.getSkillsByEmployee(id);
-        assertEquals(skills.size(),result.size());
+        SkillDto skillDto = new SkillDto();
+        skillDto.setName("Java");
+        skillDto.setId(skillId);
+        skills.add(skillDto);
+        responseEmployee.setSkills(new HashSet<>());
+        responseEmployee.getSkills().add(skill);
+        when(employeeDao.findById(1)).thenReturn(Optional.of(responseEmployee));
+        List<SkillDto> result = employeeService.getSkillsByEmployee(1);
+        assertEquals(skills,result);
     }
 
     @Test
     void testAddEmployeeToSkill() {
         int skillId = 1;
-        int id = 1;
         SkillDto skillDto = new SkillDto();
         skillDto.setId(skillId);
         skillDto.setName("Java");
-        Department department = new Department();
-        department.setId(2);
-        department.setName("Hr");
-        EmployeeDto employeeDto = new EmployeeDto();
-        employeeDto.setId(id);
-        employeeDto.setName("Hayden");
-        employeeDto.setDob(LocalDate.ofEpochDay(2003- 1 - 2));
-        employeeDto.setGender('M');
-        employeeDto.setPhoneNumber("9876543210");
-        employeeDto.setSalary(23456);
-        Employee employee = EmployeeMapper.mapEmployee(employeeDto);
-        when(employeeService.getEmployeeById(id)).thenReturn(employeeDto);
+        responseEmployee.setSkills(new HashSet<>());
+        when(employeeDao.findById(1)).thenReturn(Optional.of(responseEmployee));
         when(skillService.getSkillById(skillId)).thenReturn(skillDto);
-        employeeService.addEmployeeToSkill(id, skillId);
+        employeeService.addEmployeeToSkill(1, skillId);
         verify(employeeDao).save(employee);
     }
 }
